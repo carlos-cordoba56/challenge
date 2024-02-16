@@ -1,6 +1,26 @@
 services:
+  db:
+    container_name: azuredb
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    cap_add: [ 'SYS_PTRACE' ]
+    environment:
+      - "ACCEPT_EULA=1"
+      - "MSSQL_SA_PASSWORD=SU2orange!"
+      - "MSSQL_SA_USERNAME=myusername"
+    ports:
+      - "1433:1433"
+    hostname: mssql
   web:
     build: './app'
     ports:
       - '5000:5000'
+    environment:
+      - APP_NAME=Fit_challenge
+      - DATABASE_USERNAME=myusername
+      - DATABASE_PASSWORD=SU2orange!
+      - DATABASE_HOSTNAME=azuredb
+      - DATABASE_PORT=1433
+      - DATABASE_NAME=azure-sql
     command: 'python app.py'
+    links:
+      - db

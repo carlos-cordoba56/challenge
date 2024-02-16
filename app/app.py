@@ -1,19 +1,30 @@
-from flask import Flask, request
+import time
+from db import Productos, get_db
+from settings import settings
+from flask import Flask
 
-app = Flask(__name__) 
+app = Flask(__name__)
+
 
 
 @app.route('/', methods=['GET']) 
 def index():
-	return "Hello worasakfeoijoiasld"
+  return f"Welcome to {settings.app_name}"
 
 @app.route('/productos', methods=['GET']) 
-def productos():
-	return "All productos"
+def get_all_products():
+    conection = get_db()
+    productos = conection.query(Productos).all()
+    return productos
 
-@app.route('/producto/<product_id>')
+@app.route('/producto/<product_id>', methods=['GET'])
 def get_product(product_id):
-  return "The product is " + str(product_id)
+    conection = get_db()
+    producto = conection.query(Productos)\
+      .filter(Productos.id == product_id).first()
+    return producto
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    print("Waiting for db to start...")
+    time.sleep(300)
+    app.run(host='0.0.0.0')

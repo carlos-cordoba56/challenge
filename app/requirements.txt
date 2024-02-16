@@ -1,1 +1,4 @@
-flask
+flask==3.0.2
+SQLAlchemy==1.4.27
+pyodbc==4.0.35
+pydantic==1.10.14
